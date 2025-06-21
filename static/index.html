@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Voice Vocabulary Trainer</title>
+</head>
+<body>
+  <h1>Sesli Kelime Öğren</h1>
+
+  <input type="text" id="wordInput" placeholder="Yeni kelime girin" />
+  <button onclick="addWord()">Ekle</button>
+
+  <br><br>
+  <button onclick="startLearning()">▶️ Başla</button>
+  <br><br>
+  <button id="listenBtn" style="display:none;" onclick="handleListen()">🎤 Cevap Ver</button>
+
+  <p id="status">Hazır</p>
+
+  <script src="script.js"></script>
+</body>
+</html>

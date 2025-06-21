@@ -2,18 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Sesli Kelime Öğren</title>
+  <title>Voice Vocabulary Trainer</title>
 </head>
 <body>
-  <h2>Yeni Kelime Ekle</h2>
-  <input type="text" id="wordInput" placeholder="kelime girin" />
+  <h1>Sesli Kelime Öğren</h1>
+
+  <input type="text" id="wordInput" placeholder="Yeni kelime girin" />
   <button onclick="addWord()">Ekle</button>
 
-  <h2>Öğrenmeye Başla</h2>
+  <br><br>
   <button onclick="startLearning()">▶️ Başla</button>
+  <br><br>
 
-  <p id="status"></p>
+  <button id="listenBtn" style="display:none;" onclick="handleListen()">🎤 Cevap Ver</button>
+
+  <p id="status">Hazır</p>
 
   <script src="/static/script.js"></script>
 </body>

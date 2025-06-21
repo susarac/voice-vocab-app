@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>Speech Test</title></head>
+<body>
+  <h2>Sesli Konuşma ve Dinleme Testi</h2>
+  <button onclick="speak()">🔊 Konuş</button>
+  <button onclick="listen()">🎤 Dinle</button>
+  <p id="output">...</p>
+
+<script>
+function speak() {
+  const utter = new SpeechSynthesisUtterance("Hello, how are you?");
+  utter.lang = "en-US";
+  speechSynthesis.speak(utter);
+}
+
+function listen() {
+  const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+  recognition.lang = "en-US";
+  recognition.onresult = (event) => {
+    const transcript = event.results[0][0].transcript;
+    document.getElementById("output").innerText = "Duydu: " + transcript;
+  };
+  recognition.onerror = (e) => {
+    alert("Mikrofon hatası: " + e.error);
+  };
+  recognition.start();
+}
+</script>
+</body>
+</html>

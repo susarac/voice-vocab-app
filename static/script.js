@@ -1,3 +1,5 @@
+let currentWord = "";
+
 function speak(text, callback = null) {
   console.log("🔊 speak:", text);
   const utter = new SpeechSynthesisUtterance(text);
@@ -7,7 +9,7 @@ function speak(text, callback = null) {
     if (callback) callback();
   };
   utter.onerror = (e) => {
-    console.log("❌ speak error", e.error);
+    console.log("❌ speak error:", e.error);
   };
   speechSynthesis.speak(utter);
 }
@@ -55,35 +57,42 @@ function startLearning() {
         return;
       }
 
-      const word = data.word;
-      console.log("🧠 Teaching word:", word);
-      speak(`Today's word is ${word}. Have you heard it before?`, () => {
-        listen((response) => {
-          console.log("👂 first answer:", response);
-          if (response.includes("yes")) {
-            speak("Nice! Let's review it anyway.");
-          } else {
-            speak(`No worries! Let's learn it together. The word is ${word}.`);
-          }
+      currentWord = data.word;
+      speak(`Today's word is ${currentWord}. Have you heard it before?`);
+      document.getElementById("status").innerText = `Kelime: ${currentWord}`;
+      document.getElementById("listenBtn").style.display = "inline";
+    });
+}
 
-          speak(`Can you use ${word} in a sentence?`, () => {
-            listen((sentence) => {
-              console.log("👂 second answer:", sentence);
-              if (sentence.includes(word)) {
-                speak("Excellent! You used it correctly!", () => {
-                  fetch("/mark_learned", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ word })
-                  }).then(() => startLearning());
-                });
-              } else {
-                speak("Hmm, I don't think you used the word. Let's try another one.");
+function handleListen() {
+  listen((response) => {
+    if (response.includes("yes")) {
+      speak("Nice! Let's review it anyway.");
+    } else {
+      speak(`No worries! Let's learn it together. The word is ${currentWord}.`);
+    }
+
+    setTimeout(() => {
+      speak(`Can you use ${currentWord} in a sentence?`, () => {
+        listen((sentence) => {
+          if (sentence.includes(currentWord)) {
+            speak("Excellent! You used it correctly!", () => {
+              fetch("/mark_learned", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ word: currentWord })
+              }).then(() => {
+                document.getElementById("listenBtn").style.display = "none";
                 startLearning();
-              }
+              });
             });
-          });
+          } else {
+            speak("Hmm, I don't think you used the word. Let's try another one.");
+            document.getElementById("listenBtn").style.display = "none";
+            startLearning();
+          }
         });
       });
-    });
+    }, 1000);
+  });
 }
